@@ -20,7 +20,7 @@ Just like in real life :)
 1. The first step is to start a PostgreSQL Docker container `docker-compose up -d --build`.
 2. Apply database migrations: `npx prisma migrate dev`
 3. Start a server `npm run start`
-2. Make requests via Swagger - `http://localhost:3000/api` or any other REST client of your choice.
+4. Make requests via Swagger - `http://localhost:3000/api` or any other REST client of your choice.
 
 An `import` endpoint is responsible for importing the joke from the external [resource](https://icanhazdadjoke.com/api)
 into the database table.
