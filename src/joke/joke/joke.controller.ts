@@ -20,7 +20,7 @@ export class JokeController {
     return this.jokeService.findById(jokeId);
   }
   @Post()
-  create(request: JokeRequestDto): Promise<JokeResponseDto> {
+  create(@Body() request: JokeRequestDto): Promise<JokeResponseDto> {
     return this.jokeService.save(request);
   }
 }
