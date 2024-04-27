@@ -17,12 +17,7 @@ Just like in real life :)
 
 ## How to run
 
-1. The first step is to start a PostgreSQL Docker container defined within the `docker-compose`.
-
-```shell
-docker-compose up -d --build
-```
-
+1. The first step is to start a PostgreSQL Docker container `docker-compose up -d --build`.
 2. Apply database migrations: `npx prisma migrate dev`
 3. Start a server `npm run start`
 2. Make requests via Swagger - `http://localhost:3000/api` or any other REST client of your choice.
