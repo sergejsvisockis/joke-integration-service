@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { JokeEntity } from '../entity/joke.entity/joke.entity';
 import { Repository } from 'typeorm';
 import { JokeResponseDto } from '../dto/joke.dto/joke.response.dto';
+import { JokeRequestDto } from '../dto/joke.dto/joke.request.dto';
 
 @Injectable()
 export class JokeService {
@@ -25,21 +26,51 @@ export class JokeService {
       id: bodyAsResponse.id,
       joke: bodyAsResponse.joke,
     });
-    await this.jokeRepository.save(jokeEntity);
-    return bodyAsResponse;
+    const savedJoke = await this.jokeRepository.save(jokeEntity);
+    return this.toResponse(savedJoke);
   }
 
   async findAll(): Promise<JokeResponseDto[]> {
     const jokeEntities = await this.jokeRepository.find();
-    return jokeEntities.map(
-      (entity) => new JokeResponseDto(entity.id, entity.joke),
-    );
+    return jokeEntities.map((entity) => this.toResponse(entity));
   }
 
   async findById(jokeId: string): Promise<JokeResponseDto> {
     const joke = await this.jokeRepository.findOneBy({
       id: jokeId,
     });
-    return new JokeResponseDto(joke.id, joke.joke);
+    return this.toResponse(joke);
+  }
+
+  async save(request: JokeRequestDto): Promise<JokeResponseDto> {
+    const jokeEntity = this.jokeRepository.create({
+      id: this.generateRandomId(10),
+      joke: request.joke,
+    });
+    const savedJoke = await this.jokeRepository.save(jokeEntity);
+    return this.toResponse(savedJoke);
+  }
+
+  toResponse(entity: JokeEntity): JokeResponseDto {
+    return new JokeResponseDto(
+      entity.id,
+      entity.joke,
+      entity.createdAt,
+      entity.updatedAt,
+    );
+  }
+
+  generateRandomId(length: number): string {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomId = '';
+
+    for (let i = 0; i < length; i++) {
+      randomId += characters.charAt(
+        Math.floor(Math.random() * characters.length),
+      );
+    }
+
+    return randomId;
   }
 }
