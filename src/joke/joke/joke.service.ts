@@ -14,8 +14,7 @@ export class JokeService {
   constructor(
     @InjectRepository(JokeEntity)
     private jokeRepository: Repository<JokeEntity>,
-  ) {
-  }
+  ) {}
 
   async importJoke(request: JokeImportRequestDto): Promise<JokeResponseDto> {
     const response = await fetch(this.jokeManagerHost + request.jokeId, {
