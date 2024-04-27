@@ -11,19 +11,9 @@ Just like in real life :)
 * JavaScript/TypeScript
 * NodeJS
 * NestJS
+* Prisma
 * PostgreSQL
 * Docker
-
-## Decision record
-
-Due to the problem simplicity and time constraints it was decided to use the Nest ORM which generates a database schema.
-Please, be aware that in the case if an application scales and if that's required to optimise an SQL queries then it
-would most likely require to produce SQL queries manually.
-
-The aforementioned means that it would require a throughout monitoring and performance measurement to identify all the
-potential bottlenecks of a standard NestJS ORM capabilities.
-
-However, as mentioned before for the following problem enclosed in this task an ORM perfectly fits.
 
 ## How to run
 
