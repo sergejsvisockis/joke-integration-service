@@ -2,16 +2,20 @@ import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } fro
 
 @Entity('jokes')
 export class JokeEntity {
+
   @PrimaryColumn({ type: 'varchar', length: 11 })
   public id: string;
+
   @Column({ type: 'varchar', length: 1000 })
   public joke: string;
+
   @CreateDateColumn({
     name: 'created_at',
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
   })
   public createdAt: Date;
+
   @UpdateDateColumn({
     name: 'updated_at',
     type: 'timestamp',
