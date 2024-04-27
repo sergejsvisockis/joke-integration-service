@@ -1,96 +1,140 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import { JokeService } from './joke.service';
-import { Repository } from 'typeorm';
-import { JokeEntity } from '../entity/joke.entity/joke.entity';
-import { JokeResponseDto } from '../dto/joke.dto/joke.response.dto';
 import { JokeImportRequestDto } from '../dto/joke.dto/joke.import.request.dto';
-import { JokeUpdateRequestDto } from '../dto/joke.dto/joke.update.request.dto';
+import { JokeResponseDto } from '../dto/joke.dto/joke.response.dto';
 import { JokeRequestDto } from '../dto/joke.dto/joke.request.dto';
+import { JokeUpdateRequestDto } from '../dto/joke.dto/joke.update.request.dto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { Joke } from '@prisma/client';
 
 describe('JokeService', () => {
-  let jokeRepository: Repository<JokeEntity>;
-  let jokeService: JokeService;
+  let service: JokeService;
+  let prismaService: PrismaService;
 
-  beforeEach(() => {
-    jokeRepository = {} as Repository<JokeEntity>; // Mock repository
-    jokeService = new JokeService(jokeRepository);
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        JokeService,
+        {
+          provide: PrismaService,
+          useValue: {
+            joke: {
+              findMany: jest.fn(),
+              findUnique: jest.fn(),
+              create: jest.fn(),
+              update: jest.fn(),
+              delete: jest.fn(),
+            },
+          },
+        },
+      ],
+    }).compile();
+
+    service = module.get<JokeService>(JokeService);
+    prismaService = module.get<PrismaService>(PrismaService);
   });
 
-  it('should import the joke', async () => {
-    const mockResponse = {
-      json: jest.fn().mockResolvedValue({
-        id: 'abc123',
-        joke: 'Why did the chicken cross the road?',
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      }),
-    };
-    global.fetch = jest.fn().mockResolvedValue(mockResponse);
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
 
-    jokeRepository.create = jest.fn().mockReturnValue(new JokeEntity());
-    jokeRepository.save = jest.fn().mockResolvedValue(new JokeEntity());
-
+  it('should import a joke', async () => {
     const request: JokeImportRequestDto = { jokeId: '123' };
-    const result = await jokeService.importJoke(request);
+    const expectedResponse: JokeResponseDto = {
+      id: 'abc123',
+      joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+      createdAt: new Date('2024-04-27T08:00:00Z'),
+      updatedAt: new Date('2024-04-27T08:30:00Z'),
+    };
 
-    expect(result).toBeInstanceOf(JokeResponseDto);
-    expect(jokeRepository.create).toHaveBeenCalledTimes(1);
-    expect(jokeRepository.save).toHaveBeenCalledTimes(1);
+    jest.spyOn(global, 'fetch').mockResolvedValue({
+      json: () => Promise.resolve(expectedResponse),
+    } as any);
+    jest.spyOn(prismaService.joke, 'create').mockResolvedValue(expectedResponse as Joke);
+
+    const result = await service.importJoke(request);
+
+    expect(result).toEqual(expectedResponse);
   });
 
   it('should find all jokes', async () => {
-    const mockJokes: JokeEntity[] = [
-      { id: '1', joke: 'Joke 1' },
-    ] as JokeEntity[];
-    jokeRepository.find = jest.fn().mockResolvedValue(mockJokes);
+    const expectedResponse: JokeResponseDto[] = [
+      {
+        id: 'abc123',
+        joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+        createdAt: new Date('2024-04-27T08:00:00Z'),
+        updatedAt: new Date('2024-04-27T08:30:00Z'),
+      },
+      {
+        id: 'def456',
+        joke: 'What do you get when you cross a snowman and a vampire? Frostbite!',
+        createdAt: new Date('2024-04-27T09:00:00Z'),
+        updatedAt: new Date('2024-04-27T09:15:00Z'),
+      },
+    ];
 
-    const result = await jokeService.findAll();
+    jest.spyOn(prismaService.joke, 'findMany').mockResolvedValue(expectedResponse as Joke[]);
 
-    expect(result).toEqual(
-      mockJokes.map((joke) => jokeService.toResponse(joke)),
-    );
+    const result = await service.findAll();
+
+    expect(result).toEqual(expectedResponse);
   });
 
-  it('should find joke by ID', async () => {
-    const mockJoke: JokeEntity = { id: '1', joke: 'Joke 1' } as JokeEntity;
-    jokeRepository.findOneBy = jest.fn().mockResolvedValue(mockJoke);
+  it('should find a joke by id', async () => {
+    const jokeId = '123';
+    const expectedResponse: JokeResponseDto = {
+      id: 'abc123',
+      joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+      createdAt: new Date('2024-04-27T08:00:00Z'),
+      updatedAt: new Date('2024-04-27T08:30:00Z'),
+    };
 
-    const jokeId = '1';
-    const result = await jokeService.findById(jokeId);
+    jest.spyOn(prismaService.joke, 'findUnique').mockResolvedValue(expectedResponse as Joke);
 
-    expect(result).toEqual(jokeService.toResponse(mockJoke));
+    const result = await service.findById(jokeId);
+
+    expect(result).toEqual(expectedResponse);
   });
 
-  it('should create a joke', async () => {
-    jokeRepository.create = jest.fn().mockReturnValue(new JokeEntity());
-    jokeRepository.save = jest.fn().mockResolvedValue(new JokeEntity());
+  it('should save a joke', async () => {
+    const request: JokeRequestDto = { joke: 'some joke' };
+    const expectedResponse: JokeResponseDto = {
+      id: 'abc123',
+      joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+      createdAt: new Date('2024-04-27T08:00:00Z'),
+      updatedAt: new Date('2024-04-27T08:30:00Z'),
+    };
 
-    const request: JokeRequestDto = { joke: 'New joke' };
-    const result = await jokeService.save(request);
+    jest.spyOn(prismaService.joke, 'create').mockResolvedValue(expectedResponse as Joke);
 
-    expect(result).toBeInstanceOf(JokeResponseDto);
-    expect(jokeRepository.create).toHaveBeenCalledTimes(1);
-    expect(jokeRepository.save).toHaveBeenCalledTimes(1);
+    const result = await service.save(request);
+
+    expect(result).toEqual(expectedResponse);
   });
 
   it('should update a joke', async () => {
-    const mockJoke: JokeEntity = { id: '1', joke: 'Joke 1' } as JokeEntity;
-    jokeRepository.findOneBy = jest.fn().mockResolvedValue(mockJoke);
-    jokeRepository.save = jest.fn().mockResolvedValue(mockJoke);
+    const request: JokeUpdateRequestDto = { id: '123', joke: 'updated joke' };
+    const expectedResponse: JokeResponseDto = {
+      id: '123',
+      joke: 'updated joke',
+      createdAt: new Date('2024-04-27T08:00:00Z'),
+      updatedAt: new Date('2024-04-27T08:30:00Z'),
+    };
 
-    const request: JokeUpdateRequestDto = { id: '1', joke: 'Updated joke' };
-    const result = await jokeService.update(request);
+    jest.spyOn(prismaService.joke, 'update').mockResolvedValue(expectedResponse as Joke);
 
-    expect(result).toEqual(jokeService.toResponse(mockJoke));
-    expect(jokeRepository.findOneBy).toHaveBeenCalledWith({ id: '1' });
-    expect(jokeRepository.save).toHaveBeenCalledWith(mockJoke);
+    const result = await service.update(request);
+
+    expect(result).toEqual(expectedResponse);
   });
 
   it('should delete a joke', async () => {
-    jokeRepository.delete = jest.fn().mockResolvedValue(undefined);
+    const jokeId = '123';
 
-    const jokeId = '1';
-    await jokeService.delete(jokeId);
+    await service.delete(jokeId);
 
-    expect(jokeRepository.delete).toHaveBeenCalledWith(jokeId);
+    expect(prismaService.joke.delete).toHaveBeenCalledWith({
+      where: { id: jokeId },
+    });
   });
 });
