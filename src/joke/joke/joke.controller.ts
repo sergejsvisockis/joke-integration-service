@@ -1,9 +1,9 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { JokeImportRequestDto } from '../dto/joke.dto/joke.import.request.dto';
+import { JokeImportRequestDto } from '../dto/joke.import.request.dto';
 import { JokeService } from './joke.service';
-import { JokeResponseDto } from '../dto/joke.dto/joke.response.dto';
-import { JokeRequestDto } from '../dto/joke.dto/joke.request.dto';
-import { JokeUpdateRequestDto } from '../dto/joke.dto/joke.update.request.dto';
+import { JokeResponseDto } from '../dto/joke.response.dto';
+import { JokeRequestDto } from '../dto/joke.request.dto';
+import { JokeUpdateRequestDto } from '../dto/joke.update.request.dto';
 
 @Controller('joke')
 export class JokeController {
