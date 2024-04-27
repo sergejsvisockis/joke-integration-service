@@ -1,10 +1,4 @@
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity('jokes')
 export class JokeEntity {
@@ -25,4 +19,8 @@ export class JokeEntity {
     onUpdate: 'CURRENT_TIMESTAMP',
   })
   public updatedAt: Date;
+
+  set setJoke(value: string) {
+    this.joke = value;
+  }
 }

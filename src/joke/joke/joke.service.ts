@@ -5,14 +5,17 @@ import { JokeEntity } from '../entity/joke.entity/joke.entity';
 import { Repository } from 'typeorm';
 import { JokeResponseDto } from '../dto/joke.dto/joke.response.dto';
 import { JokeRequestDto } from '../dto/joke.dto/joke.request.dto';
+import { JokeUpdateRequestDto } from '../dto/joke.dto/joke.update.request.dto';
 
 @Injectable()
 export class JokeService {
   private jokeManagerHost: string = 'https://icanhazdadjoke.com/j/';
+
   constructor(
     @InjectRepository(JokeEntity)
     private jokeRepository: Repository<JokeEntity>,
-  ) {}
+  ) {
+  }
 
   async importJoke(request: JokeImportRequestDto): Promise<JokeResponseDto> {
     const response = await fetch(this.jokeManagerHost + request.jokeId, {
@@ -49,6 +52,19 @@ export class JokeService {
     });
     const savedJoke = await this.jokeRepository.save(jokeEntity);
     return this.toResponse(savedJoke);
+  }
+
+  async update(request: JokeUpdateRequestDto): Promise<JokeResponseDto> {
+    const jokeEntity = await this.jokeRepository.findOneBy({
+      id: request.id,
+    });
+    jokeEntity.setJoke = request.joke;
+    const savedJoke = await this.jokeRepository.save(jokeEntity);
+    return this.toResponse(savedJoke);
+  }
+
+  async delete(jokeId: string): Promise<void> {
+    await this.jokeRepository.delete(jokeId);
   }
 
   toResponse(entity: JokeEntity): JokeResponseDto {
