@@ -12,6 +12,7 @@ Just like in real life :)
 * NodeJS
 * NestJS
 * Prisma
+* Swagger
 * PostgreSQL
 * Docker
 
