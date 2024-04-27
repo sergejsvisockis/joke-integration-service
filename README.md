@@ -6,8 +6,8 @@ Just like in real life :)
 
 ## Tech stack
 
-* NodeJS
 * TypeScript
+* NodeJS
 * NestJS
 
 ## Decision record
