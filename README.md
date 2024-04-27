@@ -1,7 +1,9 @@
 # Joke Integration Service
 
 The following application is supposed to import jokes from the external resource.
-Besides that it provides a full joke lifecycle starting from the joke initiation, ending with update and retraction.
+Besides that it provides a full joke lifecycle starting from the joke initiation, ending with update and retraction via
+the REST API.
+
 Just like in real life :)
 
 ## Tech stack
