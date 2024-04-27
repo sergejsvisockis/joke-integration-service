@@ -8,7 +8,7 @@ Just like in real life :)
 
 ## Tech stack
 
-* TypeScript
+* JavaScript/TypeScript
 * NodeJS
 * NestJS
 * PostgreSQL
