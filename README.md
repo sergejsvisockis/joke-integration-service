@@ -9,6 +9,8 @@ Just like in real life :)
 * TypeScript
 * NodeJS
 * NestJS
+* PostgreSQL
+* Docker
 
 ## Decision record
 
