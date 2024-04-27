@@ -42,7 +42,7 @@ describe('JokeService', () => {
     const request: JokeImportRequestDto = { jokeId: '123' };
     const expectedResponse: JokeResponseDto = {
       id: 'abc123',
-      joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+      joke: "Why don't scientists trust atoms? Because they make up everything!",
       createdAt: new Date('2024-04-27T08:00:00Z'),
       updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
@@ -50,7 +50,9 @@ describe('JokeService', () => {
     jest.spyOn(global, 'fetch').mockResolvedValue({
       json: () => Promise.resolve(expectedResponse),
     } as any);
-    jest.spyOn(prismaService.joke, 'create').mockResolvedValue(expectedResponse as Joke);
+    jest
+      .spyOn(prismaService.joke, 'create')
+      .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.importJoke(request);
 
@@ -61,7 +63,7 @@ describe('JokeService', () => {
     const expectedResponse: JokeResponseDto[] = [
       {
         id: 'abc123',
-        joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+        joke: "Why don't scientists trust atoms? Because they make up everything!",
         createdAt: new Date('2024-04-27T08:00:00Z'),
         updatedAt: new Date('2024-04-27T08:30:00Z'),
       },
@@ -73,7 +75,9 @@ describe('JokeService', () => {
       },
     ];
 
-    jest.spyOn(prismaService.joke, 'findMany').mockResolvedValue(expectedResponse as Joke[]);
+    jest
+      .spyOn(prismaService.joke, 'findMany')
+      .mockResolvedValue(expectedResponse as Joke[]);
 
     const result = await service.findAll();
 
@@ -84,12 +88,14 @@ describe('JokeService', () => {
     const jokeId = '123';
     const expectedResponse: JokeResponseDto = {
       id: 'abc123',
-      joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+      joke: "Why don't scientists trust atoms? Because they make up everything!",
       createdAt: new Date('2024-04-27T08:00:00Z'),
       updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
-    jest.spyOn(prismaService.joke, 'findUnique').mockResolvedValue(expectedResponse as Joke);
+    jest
+      .spyOn(prismaService.joke, 'findUnique')
+      .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.findById(jokeId);
 
@@ -100,12 +106,14 @@ describe('JokeService', () => {
     const request: JokeRequestDto = { joke: 'some joke' };
     const expectedResponse: JokeResponseDto = {
       id: 'abc123',
-      joke: 'Why don\'t scientists trust atoms? Because they make up everything!',
+      joke: "Why don't scientists trust atoms? Because they make up everything!",
       createdAt: new Date('2024-04-27T08:00:00Z'),
       updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
-    jest.spyOn(prismaService.joke, 'create').mockResolvedValue(expectedResponse as Joke);
+    jest
+      .spyOn(prismaService.joke, 'create')
+      .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.save(request);
 
@@ -121,7 +129,9 @@ describe('JokeService', () => {
       updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
-    jest.spyOn(prismaService.joke, 'update').mockResolvedValue(expectedResponse as Joke);
+    jest
+      .spyOn(prismaService.joke, 'update')
+      .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.update(request);
 
