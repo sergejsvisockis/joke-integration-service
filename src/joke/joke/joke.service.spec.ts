@@ -49,6 +49,8 @@ describe('JokeService', () => {
 
     jest.spyOn(global, 'fetch').mockResolvedValue({
       json: () => Promise.resolve(expectedResponse),
+      ok: true,
+      status: 200,
     } as any);
     jest
       .spyOn(prismaService.joke, 'create')

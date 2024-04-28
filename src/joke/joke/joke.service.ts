@@ -51,7 +51,7 @@ export class JokeService {
   async save(request: JokeRequestDto): Promise<JokeResponseDto> {
     const savedJoke = await this.prismaService.joke.create({
       data: {
-        id: Utils.generateRandomId(10),
+        id: this.generateRandomId(10),
         joke: request.joke,
       },
     });
@@ -83,5 +83,19 @@ export class JokeService {
       entity.createdAt,
       entity.updatedAt,
     );
+  }
+
+  generateRandomId(length: number): string {
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let randomId = '';
+
+    for (let i = 0; i < length; i++) {
+      randomId += characters.charAt(
+        Math.floor(Math.random() * characters.length),
+      );
+    }
+
+    return randomId;
   }
 }
