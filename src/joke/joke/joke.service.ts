@@ -46,7 +46,7 @@ export class JokeService {
   async save(request: JokeRequestDto): Promise<JokeResponseDto> {
     const savedJoke = await this.prismaService.joke.create({
       data: {
-        id: RandomIdGenerator.generateRandomId(10),
+        id: Utils.generateRandomId(10),
         joke: request.joke,
       },
     });

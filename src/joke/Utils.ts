@@ -1,4 +1,4 @@
-class RandomIdGenerator {
+class Utils {
   static generateRandomId(length: number): string {
     const characters =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
