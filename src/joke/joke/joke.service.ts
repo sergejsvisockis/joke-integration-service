@@ -19,6 +19,11 @@ export class JokeService {
         Accept: 'application/json',
       },
     });
+    if (!response.ok) {
+      throw new Error(
+        `Failed to import joke. HTTP Status code: ${response.status}`,
+      );
+    }
     const bodyAsResponse = (await response.json()) as JokeResponseDto;
     const savedJoke = await this.prismaService.joke.create({
       data: {
