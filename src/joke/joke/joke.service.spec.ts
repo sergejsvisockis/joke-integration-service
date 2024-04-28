@@ -59,6 +59,30 @@ describe('JokeService', () => {
     expect(result).toEqual(expectedResponse);
   });
 
+  it('should fail to import a joke due to the 500 HTTP status code', async () => {
+    const request: JokeImportRequestDto = { jokeId: '123' };
+    const expectedResponse: JokeResponseDto = {
+      id: 'abc123',
+      joke: "Why don't scientists trust atoms? Because they make up everything!",
+      createdAt: new Date('2024-04-27T08:00:00Z'),
+      updatedAt: new Date('2024-04-27T08:30:00Z'),
+    };
+
+    jest.spyOn(global, 'fetch').mockImplementation(
+      jest.fn().mockResolvedValue({
+        ok: false,
+        status: 500,
+      }),
+    );
+    jest
+      .spyOn(prismaService.joke, 'create')
+      .mockResolvedValue(expectedResponse as Joke);
+
+    await expect(service.importJoke(request)).rejects.toThrow(
+      'Failed to import joke. HTTP Status code: 500',
+    );
+  });
+
   it('should find all jokes', async () => {
     const expectedResponse: JokeResponseDto[] = [
       {
