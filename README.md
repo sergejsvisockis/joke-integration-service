@@ -8,7 +8,7 @@ Just like in real life :)
 
 ## Tech stack
 
-* JavaScript/TypeScript
+* TypeScript
 * NodeJS
 * NestJS
 * Prisma
