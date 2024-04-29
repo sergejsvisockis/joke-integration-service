@@ -10,22 +10,8 @@ export class JokeResponseDto {
   })
   joke: string;
 
-  @ApiProperty({
-    description: 'The creation date of the joke',
-    example: '2022-04-28T10:00:00.000Z',
-  })
-  createdAt: Date;
-
-  @ApiProperty({
-    description: 'The last update date of the joke',
-    example: '2022-04-28T10:05:00.000Z',
-  })
-  updatedAt: Date;
-
-  constructor(id: string, joke: string, createdAt: Date, updatedAt: Date) {
+  constructor(id: string, joke: string) {
     this.id = id;
     this.joke = joke;
-    this.createdAt = createdAt;
-    this.updatedAt = updatedAt;
   }
 }

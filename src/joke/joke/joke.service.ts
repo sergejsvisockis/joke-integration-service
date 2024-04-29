@@ -77,12 +77,7 @@ export class JokeService {
   }
 
   toResponse(entity: Joke): JokeResponseDto {
-    return new JokeResponseDto(
-      entity.id,
-      entity.joke,
-      entity.createdAt,
-      entity.updatedAt,
-    );
+    return new JokeResponseDto(entity.id, entity.joke);
   }
 
   generateRandomId(length: number): string {
