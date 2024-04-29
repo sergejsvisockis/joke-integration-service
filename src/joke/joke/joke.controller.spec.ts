@@ -38,12 +38,7 @@ describe('JokeController', () => {
 
   it('should import the joke fromt eh external source', async () => {
     const request: JokeImportRequestDto = { jokeId: '123' };
-    const response: JokeResponseDto = new JokeResponseDto(
-      '123',
-      'Test joke',
-      new Date(),
-      new Date(),
-    );
+    const response: JokeResponseDto = new JokeResponseDto('123', 'Test joke');
     jest.spyOn(service, 'importJoke').mockResolvedValue(response);
 
     const result = await controller.importJoke(request);
@@ -52,8 +47,8 @@ describe('JokeController', () => {
 
   it('should find all the jokes', async () => {
     const response: JokeResponseDto[] = [
-      new JokeResponseDto('1', 'Joke 1', new Date(), new Date()),
-      new JokeResponseDto('2', 'Joke 2', new Date(), new Date()),
+      new JokeResponseDto('1', 'Joke 1'),
+      new JokeResponseDto('2', 'Joke 2'),
     ];
     jest.spyOn(service, 'findAll').mockResolvedValue(response);
 
@@ -63,12 +58,7 @@ describe('JokeController', () => {
 
   it('should find the joke by ID', async () => {
     const jokeId = '123';
-    const response: JokeResponseDto = new JokeResponseDto(
-      '123',
-      'Test joke',
-      new Date(),
-      new Date(),
-    );
+    const response: JokeResponseDto = new JokeResponseDto('123', 'Test joke');
     jest.spyOn(service, 'findById').mockResolvedValue(response);
 
     const result = await controller.findById(jokeId);
@@ -77,12 +67,7 @@ describe('JokeController', () => {
 
   it('should save Joke', async () => {
     const request: JokeRequestDto = { joke: 'New joke' };
-    const response: JokeResponseDto = new JokeResponseDto(
-      '123',
-      'New joke',
-      new Date(),
-      new Date(),
-    );
+    const response: JokeResponseDto = new JokeResponseDto('123', 'New joke');
     jest.spyOn(service, 'save').mockResolvedValue(response);
 
     const result = await controller.create(request);
@@ -94,8 +79,6 @@ describe('JokeController', () => {
     const response: JokeResponseDto = new JokeResponseDto(
       '123',
       'Updated joke',
-      new Date(),
-      new Date(),
     );
     jest.spyOn(service, 'update').mockResolvedValue(response);
 

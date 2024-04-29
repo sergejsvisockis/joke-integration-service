@@ -43,8 +43,6 @@ describe('JokeService', () => {
     const expectedResponse: JokeResponseDto = {
       id: 'abc123',
       joke: "Why don't scientists trust atoms? Because they make up everything!",
-      createdAt: new Date('2024-04-27T08:00:00Z'),
-      updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
     jest.spyOn(global, 'fetch').mockResolvedValue({
@@ -66,8 +64,6 @@ describe('JokeService', () => {
     const expectedResponse: JokeResponseDto = {
       id: 'abc123',
       joke: "Why don't scientists trust atoms? Because they make up everything!",
-      createdAt: new Date('2024-04-27T08:00:00Z'),
-      updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
     jest.spyOn(global, 'fetch').mockImplementation(
@@ -90,14 +86,10 @@ describe('JokeService', () => {
       {
         id: 'abc123',
         joke: "Why don't scientists trust atoms? Because they make up everything!",
-        createdAt: new Date('2024-04-27T08:00:00Z'),
-        updatedAt: new Date('2024-04-27T08:30:00Z'),
       },
       {
         id: 'def456',
         joke: 'What do you get when you cross a snowman and a vampire? Frostbite!',
-        createdAt: new Date('2024-04-27T09:00:00Z'),
-        updatedAt: new Date('2024-04-27T09:15:00Z'),
       },
     ];
 
@@ -115,8 +107,6 @@ describe('JokeService', () => {
     const expectedResponse: JokeResponseDto = {
       id: 'abc123',
       joke: "Why don't scientists trust atoms? Because they make up everything!",
-      createdAt: new Date('2024-04-27T08:00:00Z'),
-      updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
     jest
@@ -133,8 +123,6 @@ describe('JokeService', () => {
     const expectedResponse: JokeResponseDto = {
       id: 'abc123',
       joke: "Why don't scientists trust atoms? Because they make up everything!",
-      createdAt: new Date('2024-04-27T08:00:00Z'),
-      updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
     jest
@@ -151,8 +139,6 @@ describe('JokeService', () => {
     const expectedResponse: JokeResponseDto = {
       id: '123',
       joke: 'updated joke',
-      createdAt: new Date('2024-04-27T08:00:00Z'),
-      updatedAt: new Date('2024-04-27T08:30:00Z'),
     };
 
     jest
