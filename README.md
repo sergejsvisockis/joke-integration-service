@@ -26,4 +26,4 @@ Just like in real life :)
 An `import` endpoint is responsible for importing the joke from the external [resource](https://icanhazdadjoke.com/api)
 into the database table.
 
-Let's consider that we always would like tom import a joke with the following ID: `R7UfaahVfFd`
+Let's consider that we always would like to import a joke with the following ID: `R7UfaahVfFd`
