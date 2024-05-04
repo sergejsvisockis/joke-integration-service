@@ -1,34 +1,26 @@
-import { Injectable } from '@nestjs/common';
-import { JokeImportRequestDto } from '../dto/joke.import.request.dto';
-import { JokeResponseDto } from '../dto/joke.response.dto';
-import { JokeRequestDto } from '../dto/joke.request.dto';
-import { JokeUpdateRequestDto } from '../dto/joke.update.request.dto';
-import { PrismaService } from '../../prisma/prisma.service';
-import { Joke } from '@prisma/client';
+import {Injectable} from '@nestjs/common';
+import {JokeImportRequestDto} from '../dto/joke.import.request.dto';
+import {JokeResponseDto} from '../dto/joke.response.dto';
+import {JokeRequestDto} from '../dto/joke.request.dto';
+import {JokeUpdateRequestDto} from '../dto/joke.update.request.dto';
+import {PrismaService} from '../../prisma/prisma.service';
+import {Joke} from '@prisma/client';
+import {JokeClient} from "./joke.client";
 
 @Injectable()
 export class JokeService {
-  private jokeManagerHost: string = 'https://icanhazdadjoke.com/j/';
 
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+      private readonly prismaService: PrismaService,
+      private readonly jokeClient: JokeClient,
+  ) {}
 
   async importJoke(request: JokeImportRequestDto): Promise<JokeResponseDto> {
-    const response = await fetch(this.jokeManagerHost + request.jokeId, {
-      method: 'GET',
-      headers: {
-        Accept: 'application/json',
-      },
-    });
-    if (!response.ok) {
-      throw new Error(
-        `Failed to import joke. HTTP Status code: ${response.status}`,
-      );
-    }
-    const bodyAsResponse = (await response.json()) as JokeResponseDto;
+    const response = await this.jokeClient.fetchJoke(request);
     const savedJoke = await this.prismaService.joke.create({
       data: {
-        id: bodyAsResponse.id,
-        joke: bodyAsResponse.joke,
+        id: response.id,
+        joke: response.joke,
       },
     });
     return this.toResponse(savedJoke);

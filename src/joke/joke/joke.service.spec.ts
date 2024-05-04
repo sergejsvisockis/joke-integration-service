@@ -6,15 +6,18 @@ import { JokeRequestDto } from '../dto/joke.request.dto';
 import { JokeUpdateRequestDto } from '../dto/joke.update.request.dto';
 import { PrismaService } from '../../prisma/prisma.service';
 import { Joke } from '@prisma/client';
+import { JokeClient } from './joke.client';
 
 describe('JokeService', () => {
   let service: JokeService;
   let prismaService: PrismaService;
+  let jokeClient: JokeClient;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         JokeService,
+        JokeClient,
         {
           provide: PrismaService,
           useValue: {
@@ -32,6 +35,7 @@ describe('JokeService', () => {
 
     service = module.get<JokeService>(JokeService);
     prismaService = module.get<PrismaService>(PrismaService);
+    jokeClient = module.get<JokeClient>(JokeClient);
   });
 
   afterEach(() => {
@@ -45,40 +49,14 @@ describe('JokeService', () => {
       joke: "Why don't scientists trust atoms? Because they make up everything!",
     };
 
-    jest.spyOn(global, 'fetch').mockResolvedValue({
-      json: () => Promise.resolve(expectedResponse),
-      ok: true,
-      status: 200,
-    } as any);
+    jest.spyOn(jokeClient, 'fetchJoke').mockResolvedValue(expectedResponse);
     jest
-      .spyOn(prismaService.joke, 'create')
-      .mockResolvedValue(expectedResponse as Joke);
+        .spyOn(prismaService.joke, 'create')
+        .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.importJoke(request);
 
     expect(result).toEqual(expectedResponse);
-  });
-
-  it('should fail to import a joke due to the 500 HTTP status code', async () => {
-    const request: JokeImportRequestDto = { jokeId: '123' };
-    const expectedResponse: JokeResponseDto = {
-      id: 'abc123',
-      joke: "Why don't scientists trust atoms? Because they make up everything!",
-    };
-
-    jest.spyOn(global, 'fetch').mockImplementation(
-      jest.fn().mockResolvedValue({
-        ok: false,
-        status: 500,
-      }),
-    );
-    jest
-      .spyOn(prismaService.joke, 'create')
-      .mockResolvedValue(expectedResponse as Joke);
-
-    await expect(service.importJoke(request)).rejects.toThrow(
-      'Failed to import joke. HTTP Status code: 500',
-    );
   });
 
   it('should find all jokes', async () => {
@@ -94,8 +72,8 @@ describe('JokeService', () => {
     ];
 
     jest
-      .spyOn(prismaService.joke, 'findMany')
-      .mockResolvedValue(expectedResponse as Joke[]);
+        .spyOn(prismaService.joke, 'findMany')
+        .mockResolvedValue(expectedResponse as Joke[]);
 
     const result = await service.findAll();
 
@@ -110,8 +88,8 @@ describe('JokeService', () => {
     };
 
     jest
-      .spyOn(prismaService.joke, 'findUnique')
-      .mockResolvedValue(expectedResponse as Joke);
+        .spyOn(prismaService.joke, 'findUnique')
+        .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.findById(jokeId);
 
@@ -126,8 +104,8 @@ describe('JokeService', () => {
     };
 
     jest
-      .spyOn(prismaService.joke, 'create')
-      .mockResolvedValue(expectedResponse as Joke);
+        .spyOn(prismaService.joke, 'create')
+        .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.save(request);
 
@@ -142,8 +120,8 @@ describe('JokeService', () => {
     };
 
     jest
-      .spyOn(prismaService.joke, 'update')
-      .mockResolvedValue(expectedResponse as Joke);
+        .spyOn(prismaService.joke, 'update')
+        .mockResolvedValue(expectedResponse as Joke);
 
     const result = await service.update(request);
 
