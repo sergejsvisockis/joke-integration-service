@@ -36,7 +36,7 @@ describe('JokeController', () => {
     expect(controller).toBeDefined();
   });
 
-  it('should import the joke fromt eh external source', async () => {
+  it('should import the joke from the external source', async () => {
     const request: JokeImportRequestDto = { jokeId: '123' };
     const response: JokeResponseDto = new JokeResponseDto('123', 'Test joke');
     jest.spyOn(service, 'importJoke').mockResolvedValue(response);
