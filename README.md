@@ -38,3 +38,5 @@ Let's consider that we always would like to import a joke with the following ID:
 To generate a database migration SQL upon the prisma schema adjustment run the following
 command `npx prisma migrate dev`
 
+Detailed information on Prisma migration can be found within
+the [official documentation](https://www.prisma.io/docs/orm/reference/prisma-cli-reference#migrate-deploy)
