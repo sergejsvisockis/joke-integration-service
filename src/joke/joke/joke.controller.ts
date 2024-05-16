@@ -1,17 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { JokeImportRequestDto } from '../dto/joke.import.request.dto';
-import { JokeService } from './joke.service';
-import { JokeResponseDto } from '../dto/joke.response.dto';
-import { JokeRequestDto } from '../dto/joke.request.dto';
-import { JokeUpdateRequestDto } from '../dto/joke.update.request.dto';
+import {Body, Controller, Delete, Get, Param, Post, Put} from '@nestjs/common';
+import {JokeService} from './joke.service';
+import {JokeResponseDto} from '../dto/joke.response.dto';
+import {JokeRequestDto} from '../dto/joke.request.dto';
+import {JokeUpdateRequestDto} from '../dto/joke.update.request.dto';
 
 @Controller('joke')
 export class JokeController {
   constructor(private jokeService: JokeService) {}
 
-  @Post('import')
-  importJoke(@Body() request: JokeImportRequestDto): Promise<JokeResponseDto> {
-    return this.jokeService.importJoke(request);
+  @Get('search')
+  searchJokes(): Promise<JokeResponseDto[]> {
+    return this.jokeService.importJokes();
   }
 
   @Get()

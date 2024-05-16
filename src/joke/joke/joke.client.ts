@@ -1,13 +1,11 @@
 import {Injectable} from "@nestjs/common";
-import {JokeImportRequestDto} from "../dto/joke.import.request.dto";
-import {JokeResponseDto} from "../dto/joke.response.dto";
 
 @Injectable()
 export class JokeClient {
-    private jokeManagerHost: string = 'https://icanhazdadjoke.com/j/';
+    private jokeManagerHost: string = 'https://icanhazdadjoke.com/search';
 
-    async fetchJoke(request: JokeImportRequestDto): Promise<JokeResponseDto> {
-        const response = await fetch(this.jokeManagerHost + request.jokeId, {
+    async fetchJoke(): Promise<Joke[]> {
+        const response = await fetch(this.jokeManagerHost, {
             method: 'GET',
             headers: {
                 Accept: 'application/json',
@@ -18,6 +16,25 @@ export class JokeClient {
                 `Failed to import joke. HTTP Status code: ${response.status}`,
             );
         }
-        return (await response.json()) as JokeResponseDto;
+        const responseAsData = await response.json() as JokeResponseData;
+        return responseAsData.results;
     }
+
+}
+
+interface JokeResponseData {
+    current_page: number;
+    limit: number;
+    next_page: number;
+    previous_page: number;
+    results: Joke[];
+    search_term: string;
+    status: number;
+    total_jokes: number;
+    total_pages: number;
+}
+
+interface Joke {
+    id: string;
+    joke: string;
 }

@@ -1,12 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { JokeService } from './joke.service';
-import { JokeImportRequestDto } from '../dto/joke.import.request.dto';
-import { JokeResponseDto } from '../dto/joke.response.dto';
-import { JokeRequestDto } from '../dto/joke.request.dto';
-import { JokeUpdateRequestDto } from '../dto/joke.update.request.dto';
-import { PrismaService } from '../../prisma/prisma.service';
-import { Joke } from '@prisma/client';
-import { JokeClient } from './joke.client';
+import {Test, TestingModule} from '@nestjs/testing';
+import {JokeService} from './joke.service';
+import {JokeResponseDto} from '../dto/joke.response.dto';
+import {JokeRequestDto} from '../dto/joke.request.dto';
+import {JokeUpdateRequestDto} from '../dto/joke.update.request.dto';
+import {PrismaService} from '../../prisma/prisma.service';
+import {Joke} from '@prisma/client';
+import {JokeClient} from './joke.client';
 
 describe('JokeService', () => {
   let service: JokeService;
@@ -42,22 +41,42 @@ describe('JokeService', () => {
     jest.clearAllMocks();
   });
 
-  it('should import a joke', async () => {
-    const request: JokeImportRequestDto = { jokeId: '123' };
-    const expectedResponse: JokeResponseDto = {
-      id: 'abc123',
-      joke: "Why don't scientists trust atoms? Because they make up everything!",
-    };
+    it('should import a joke', async () => {
+        const mockJokes = [
+            { id: '1', joke: 'Sample joke 1', createdAt: null, updatedAt: null },
+            { id: '2', joke: 'Sample joke 2', createdAt: null, updatedAt: null },
+        ];
+        jest.spyOn(jokeClient, 'fetchJoke').mockResolvedValue(mockJokes);
 
-    jest.spyOn(jokeClient, 'fetchJoke').mockResolvedValue(expectedResponse);
-    jest
-        .spyOn(prismaService.joke, 'create')
-        .mockResolvedValue(expectedResponse as Joke);
+        // Mock PrismaService's createMany and findMany methods
+        prismaService.joke.createMany = jest.fn();
+        jest.spyOn(prismaService.joke, 'findMany').mockResolvedValue(mockJokes);
 
-    const result = await service.importJoke(request);
+        // Call the method under test
+        const result = await service.importJokes();
 
-    expect(result).toEqual(expectedResponse);
-  });
+        // Check if the correct methods were called with the correct parameters
+        expect(jokeClient.fetchJoke).toHaveBeenCalled();
+        expect(prismaService.joke.createMany).toHaveBeenCalledWith({
+            data: mockJokes.map(joke => ({
+                id: joke.id,
+                joke: joke.joke,
+            })),
+        });
+        expect(prismaService.joke.findMany).toHaveBeenCalledWith({
+            where: {
+                id: {
+                    in: mockJokes.map(joke => joke.id),
+                },
+            },
+        });
+
+        // Check if the result matches the expected output
+        const expectedOutput: JokeResponseDto[] = mockJokes.map(joke =>
+            service.toResponse(joke)
+        );
+        expect(result).toEqual(expectedOutput);
+    });
 
   it('should find all jokes', async () => {
     const expectedResponse: JokeResponseDto[] = [

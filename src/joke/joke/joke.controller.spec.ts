@@ -37,11 +37,10 @@ describe('JokeController', () => {
   });
 
   it('should import the joke from the external source', async () => {
-    const request: JokeImportRequestDto = { jokeId: '123' };
-    const response: JokeResponseDto = new JokeResponseDto('123', 'Test joke');
-    jest.spyOn(service, 'importJoke').mockResolvedValue(response);
+    const response: JokeResponseDto[] = [new JokeResponseDto('123', 'Test joke')];
+    jest.spyOn(service, 'importJokes').mockResolvedValue(response);
 
-    const result = await controller.importJoke(request);
+    const result = await controller.searchJokes();
     expect(result).toEqual(response);
   });
 

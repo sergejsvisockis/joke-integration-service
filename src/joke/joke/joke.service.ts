@@ -1,5 +1,4 @@
 import {Injectable} from '@nestjs/common';
-import {JokeImportRequestDto} from '../dto/joke.import.request.dto';
 import {JokeResponseDto} from '../dto/joke.response.dto';
 import {JokeRequestDto} from '../dto/joke.request.dto';
 import {JokeUpdateRequestDto} from '../dto/joke.update.request.dto';
@@ -15,15 +14,24 @@ export class JokeService {
       private readonly jokeClient: JokeClient,
   ) {}
 
-  async importJoke(request: JokeImportRequestDto): Promise<JokeResponseDto> {
-    const response = await this.jokeClient.fetchJoke(request);
-    const savedJoke = await this.prismaService.joke.create({
-      data: {
-        id: response.id,
-        joke: response.joke,
+  async importJokes(): Promise<JokeResponseDto[]> {
+    const response = await this.jokeClient.fetchJoke();
+    const createdJokes = response.map(joke => ({
+      id: joke.id,
+      joke: joke.joke,
+    }));
+    await this.prismaService.joke.createMany({
+      data: createdJokes,
+    });
+    const savedJokes = await this.prismaService.joke.findMany({
+      where: {
+        id: {
+          in: createdJokes.map(joke => joke.id),
+        },
       },
     });
-    return this.toResponse(savedJoke);
+
+    return savedJokes.map(joke => this.toResponse(joke));
   }
 
   async findAll(): Promise<JokeResponseDto[]> {
