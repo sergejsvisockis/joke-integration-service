@@ -30,10 +30,8 @@ Just like in real life :)
 When an application is up and running make requests via Swagger - `http://localhost:3000/api` or any other REST client
 of your choice.
 
-An `import` endpoint is responsible for importing the joke from the external [resource](https://icanhazdadjoke.com/api)
-into the database table.
-
-Let's consider that we always would like to import a joke with the following ID: `R7UfaahVfFd`
+An `search` endpoint is responsible for finding and importing all the jokes from the external
+[resource](https://icanhazdadjoke.com/api) into the database table.
 
 ## Database migration
 To generate a database migration SQL upon the prisma schema adjustment run the following
