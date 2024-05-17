@@ -20,7 +20,7 @@ export class JokeService {
       id: joke.id,
       joke: joke.joke,
     }));
-    await this.prismaService.joke.createMany({
+    await this.prismaService.joke.updateMany({
       data: createdJokes,
     });
     const savedJokes = await this.prismaService.joke.findMany({

@@ -49,7 +49,7 @@ describe('JokeService', () => {
         jest.spyOn(jokeClient, 'fetchJoke').mockResolvedValue(mockJokes);
 
         // Mock PrismaService's createMany and findMany methods
-        prismaService.joke.createMany = jest.fn();
+        prismaService.joke.updateMany = jest.fn();
         jest.spyOn(prismaService.joke, 'findMany').mockResolvedValue(mockJokes);
 
         // Call the method under test
@@ -57,7 +57,7 @@ describe('JokeService', () => {
 
         // Check if the correct methods were called with the correct parameters
         expect(jokeClient.fetchJoke).toHaveBeenCalled();
-        expect(prismaService.joke.createMany).toHaveBeenCalledWith({
+        expect(prismaService.joke.updateMany).toHaveBeenCalledWith({
             data: mockJokes.map(joke => ({
                 id: joke.id,
                 joke: joke.joke,
