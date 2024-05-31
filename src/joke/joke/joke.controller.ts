@@ -6,35 +6,36 @@ import {JokeUpdateRequestDto} from '../dto/joke.update.request.dto';
 
 @Controller('joke')
 export class JokeController {
-  constructor(private jokeService: JokeService) {}
+    constructor(private jokeService: JokeService) {
+    }
 
-  @Get('search')
-  searchJokes(): Promise<JokeResponseDto[]> {
-    return this.jokeService.importJokes();
-  }
+    @Get('search')
+    searchJokes(): Promise<JokeResponseDto[]> {
+        return this.jokeService.importJokes();
+    }
 
-  @Get()
-  findAll(): Promise<JokeResponseDto[]> {
-    return this.jokeService.findAll();
-  }
+    @Get()
+    findAll(): Promise<JokeResponseDto[]> {
+        return this.jokeService.findAll();
+    }
 
-  @Get(':jokeId')
-  findById(@Param('jokeId') jokeId: string): Promise<JokeResponseDto> {
-    return this.jokeService.findById(jokeId);
-  }
+    @Get(':jokeId')
+    findById(@Param('jokeId') jokeId: string): Promise<JokeResponseDto> {
+        return this.jokeService.findById(jokeId);
+    }
 
-  @Post()
-  create(@Body() request: JokeRequestDto): Promise<JokeResponseDto> {
-    return this.jokeService.save(request);
-  }
+    @Post()
+    create(@Body() request: JokeRequestDto): Promise<JokeResponseDto> {
+        return this.jokeService.save(request);
+    }
 
-  @Put()
-  update(@Body() request: JokeUpdateRequestDto): Promise<JokeUpdateRequestDto> {
-    return this.jokeService.update(request);
-  }
+    @Put()
+    update(@Body() request: JokeUpdateRequestDto): Promise<JokeUpdateRequestDto> {
+        return this.jokeService.update(request);
+    }
 
-  @Delete(':jokeId')
-  delete(@Param('jokeId') jokeId: string): Promise<void> {
-    return this.jokeService.delete(jokeId);
-  }
+    @Delete(':jokeId')
+    delete(@Param('jokeId') jokeId: string): Promise<void> {
+        return this.jokeService.delete(jokeId);
+    }
 }

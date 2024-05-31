@@ -9,4 +9,5 @@ import {JokeClient} from "./joke/joke.client";
     controllers: [JokeController],
     providers: [JokeService, JokeClient],
 })
-export class JokeModule {}
+export class JokeModule {
+}
