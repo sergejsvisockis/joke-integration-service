@@ -21,13 +21,19 @@ export class JokeService {
             id: joke.id,
             joke: joke.joke,
         }));
-        for (const joke of createdJokes) {
-            await this.prismaService.joke.upsert({
-                where: {id: joke.id},
-                update: {joke: joke.joke},
-                create: {id: joke.id, joke: joke.joke},
-            });
-        }
+
+        await this.prismaService.$transaction(async (prisma) => {
+            await Promise.all(
+                createdJokes.map(joke =>
+                    prisma.joke.upsert({
+                        where: {id: joke.id},
+                        update: {joke: joke.joke},
+                        create: {id: joke.id, joke: joke.joke},
+                    })
+                )
+            );
+        });
+
         const savedJokes = await this.prismaService.joke.findMany({
             where: {
                 id: {

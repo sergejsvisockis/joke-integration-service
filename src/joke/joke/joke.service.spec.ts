@@ -48,15 +48,20 @@ describe('JokeService', () => {
         ];
         jest.spyOn(jokeClient, 'fetchJoke').mockResolvedValue(mockJokes);
 
-        prismaService.joke.upsert = jest.fn().mockResolvedValue({});  // Mock the upsert method
+        const upsertMock = jest.fn().mockResolvedValue({});
+        prismaService.joke.upsert = upsertMock;
         jest.spyOn(prismaService.joke, 'findMany').mockResolvedValue(mockJokes);
+
+        prismaService.$transaction = jest.fn().mockImplementation(async (callback) => {
+            return await callback(prismaService);
+        });
 
         const result = await service.importJokes();
 
         expect(jokeClient.fetchJoke).toHaveBeenCalled();
 
         for (const joke of mockJokes) {
-            expect(prismaService.joke.upsert).toHaveBeenCalledWith({
+            expect(upsertMock).toHaveBeenCalledWith({
                 where: {id: joke.id},
                 update: {joke: joke.joke},
                 create: {id: joke.id, joke: joke.joke},
