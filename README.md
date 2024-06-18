@@ -23,8 +23,8 @@ Just like in real life :)
 2. Apply database migrations: `npx prisma migrate dev`
 3. Start a server `npm run start`
 
-### Docker Swarm cluster
-1. Run the database and an application as a Docker swarm cluster `docker-compose up -d --build`
+### Both applications Dockerized
+1. Run the database and an application both in the Docker environment run `docker-compose up -d --build`
 
 ## Try it out
 When an application is up and running make requests via Swagger - `http://localhost:3000/api` or any other REST client
